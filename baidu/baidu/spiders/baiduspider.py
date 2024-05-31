@@ -7,9 +7,10 @@ from ..items import BaiduSpiderItem
 class BaiduSpider(scrapy.Spider):
     name = "baidu"
 
-    def __init__(self, query='', pages=1, *args, **kwargs):
-        self.query = '骨折并发症'
-        self.pages = 20
+    def __init__(self, query='骨折并发症', pages=20, *args, **kwargs):
+        super(BaiduSpider, self).__init__(*args, **kwargs)
+        self.query = query
+        self.pages = int(pages)
 
     def start_requests(self):
         for page in range(1, self.pages + 1):

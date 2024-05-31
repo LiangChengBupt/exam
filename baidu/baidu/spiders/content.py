@@ -6,8 +6,12 @@ from ..items import UrlContentItem
 class BaiduContentSpider(scrapy.Spider):
     name = "baidu_content"
 
+    def __init__(self, input_file='data/medic3.json', *args, **kwargs):
+        super(BaiduContentSpider, self).__init__(*args, **kwargs)
+        self.input_file = input_file
+
     def start_requests(self):
-        with open('data/medic3.json', 'r', encoding='utf-8') as f:
+        with open(self.input_file, 'r', encoding='utf-8') as f:
             search_results = json.load(f)
             for result in search_results:
                 title = result['title']
