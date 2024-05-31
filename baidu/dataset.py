@@ -5,7 +5,7 @@ import os
 from keywords import zh_medical_biology_words
 from tqdm import tqdm
 import ast
-from score import calculate_bleu,calculate_glue,calculate_gpt4,calculate_bertscore
+from score import calculate_bleu,calculate_glue,calculate_gpt4,calculate_bertscore,rule_based_filter
 class dataset_construction():
     def __init__(self,query_num=5,policy='gpt-4',threshold=0.5):
         self.keywords = zh_medical_biology_words
@@ -45,6 +45,10 @@ class dataset_construction():
         """
         return query_gpt(prompt)
     def related_judge(self,query,content):
+        """
+        Judge whether the content is related to the search query.
+        The policy can be 'gpt-4','bert','bleu','glue','rule'.
+        """
         if self.policy == 'gpt-4':
             return calculate_gpt4(query,content)
         elif self.policy == 'bert':
@@ -60,13 +64,15 @@ class dataset_construction():
             return calculate_bleu(query,content) > self.threshold
         elif self.policy == 'glue':
             return calculate_glue(query,content) > self.threshold
+        elif self.policy == 'rule':
+            return rule_based_filter(query,content)
     
     def filter_info(self):
         """
         Filter the content from the spiders.
         """
         content_dir = 'data/content/'
-        ouput_dir = 'data/filtered'
+        ouput_dir = 'data/filtered/'
         # 遍历文件夹，读取json文件内容，进行过滤
         for file in os.listdir(content_dir):
             with open(content_dir+file,'r') as f:
@@ -79,6 +85,8 @@ class dataset_construction():
                 # 保存到新的文件夹
                 with open(ouput_dir+file,'w') as f:
                     json.dump(content,f)
+
+# main function
 medical_dataset = dataset_construction()
 medical_dataset.search_info()
 medical_dataset.filter_info()

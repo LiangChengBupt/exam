@@ -1,9 +1,10 @@
 from openai import OpenAI
+from api_key import api_key
 def query_gpt(prompt: str, model_name: str='gpt-4'):
     # print(prompt)
     client = OpenAI(
         base_url='https://api.openai-proxy.org/v1',
-        api_key='YOUR API KEY HERE'
+        api_key=api_key
     )
 
     completion = client.chat.completions.create(

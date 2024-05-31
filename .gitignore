@@ -6,3 +6,4 @@
 BaiduSpider/
 .vscode/
 __pycache__/
+baidu/api_key.py
